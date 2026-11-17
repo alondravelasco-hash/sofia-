@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Método Exacto · Matemáticas 3° (Multi-Dispositivo Apple Glass)</title>
+  <!-- Google Fonts: Syne, Cormorant Garamond y Plus Jakarta Sans -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Syne:wght@700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0c0a0e;
+      --pink-primary: #f49cbb;
+      --pink-soft: #fce7ef;
+      --pink-deep: #b83b68;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: #ffffff;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Escenario 16:9 auto-escalable para TV, Computadora y Tablet */
+    #stage {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      transform-origin: center center;
+      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(244, 156, 187, 0.25);
+      border-radius: 28px;
+      overflow: hidden;
+      background: #0e0c10;
+      flex-shrink: 0;
+      transition: transform 0.2s ease-out;
+    }
+
+    /* Orbes ambientales animados detrás del cristal */
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(85px);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatOrb 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(35px, -25px) scale(1.08); }
+      100% { transform: translate(-25px, 30px) scale(0.95); }
+    }
+
+    /* Diapositivas con transición fluida estilo Apple */
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 1280px;
+      height: 720px;
+      padding: 44px 60px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transform: perspective(1400px) scale(0.94) translateY(24px);
+      filter: blur(10px);
+      transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: perspective(1400px) scale(1) translateY(0);
+      filter: blur(0);
+      z-index: 5;
+    }
+
+    /* Entradas escalonadas */
+    .slide .anim-item {
+      opacity: 0;
+      transform: translateY(22px) scale(0.98);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .slide.active .anim-item { opacity: 1; transform: translateY(0) scale(1); }
+    .slide.active .delay-1 { transition-delay: 0.08s; }
+    .slide.active .delay-2 { transition-delay: 0.16s; }
+    .slide.active .delay-3 { transition-delay: 0.24s; }
+    .slide.active .delay-4 { transition-delay: 0.32s; }
+
+    /* Lienzo de partículas matemáticas */
+    #math-particles {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.75;
+    }
+
+    /* Tipografía Editorial */
+    .heavy-display {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+    }
+
+    .editorial-script {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    /* Tarjetas Apple Glassmorphism */
+    .apple-glass-dark {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(244, 156, 187, 0.06) 100%);
+      backdrop-filter: blur(28px) saturate(170%);
+      -webkit-backdrop-filter: blur(28px) saturate(170%);
+      border: 1px solid rgba(244, 156, 187, 0.32);
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      border-radius: 26px;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+    .apple-glass-dark:hover {
+      border-color: rgba(244, 156, 187, 0.75);
+      box-shadow: 0 30px 60px rgba(244, 156, 187, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .apple-glass-light {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(252, 231, 239, 0.62) 100%);
+      backdrop-filter: blur(26px) saturate(185%);
+      -webkit-backdrop-filter: blur(26px) saturate(185%);
+      border: 1px solid rgba(255, 255, 255, 0.96);
+      box-shadow: 0 20px 44px rgba(184, 59, 104, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1);
+      border-radius: 26px;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+    .apple-glass-light:hover {
+      border-color: #f49cbb;
+      box-shadow: 0 28px 54px rgba(184, 59, 104, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+
+    .apple-glass-pink {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(244, 156, 187, 0.24) 0%, rgba(184, 59, 104, 0.16) 100%);
+      backdrop-filter: blur(28px) saturate(175%);
+      -webkit-backdrop-filter: blur(28px) saturate(175%);
+      border: 1px solid rgba(244, 156, 187, 0.5);
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-radius: 26px;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+    }
+
+    /* Destello especular dinámico */
+    .apple-glass-dark::before,
+    .apple-glass-light::before,
+    .apple-glass-pink::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.32),
+        transparent 65%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .apple-glass-dark:hover::before,
+    .apple-glass-light:hover::before,
+    .apple-glass-pink:hover::before {
+      opacity: 1;
+    }
+
+    .shimmer-text {
+      background: linear-gradient(110deg, #f49cbb 25%, #ffffff 50%, #f49cbb 75%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textShimmer 5.5s linear infinite;
+    }
+
+    @keyframes textShimmer { to { background-position: 200% center; } }
+
+    .node-pulse { animation: nodeBeat 3s ease-in-out infinite alternate; }
+    @keyframes nodeBeat {
+      0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(244, 156, 187, 0.4)); }
+      100% { transform: scale(1.14); filter: drop-shadow(0 0 12px rgba(244, 156, 187, 0.95)); }
+    }
+
+    .orbital-ring {
+      position: absolute;
+      border: 1px solid rgba(244, 156, 187, 0.22);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: spinSlow 45s linear infinite;
+    }
+
+    @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .bg-watermark {
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 210px;
+      font-weight: 600;
+      opacity: 0.055;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 0;
+      animation: driftWatermark 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes driftWatermark { from { transform: translateX(-20px); } to { transform: translateX(30px); } }
+    .float-slow { animation: gentleFloat 6s ease-in-out infinite alternate; }
+    @keyframes gentleFloat { from { transform: translateY(0px); } to { transform: translateY(-10px); } }
+    @keyframes pulseGlow { 0%, 100% { opacity: 0.65; transform: scale(1); } 50% { opacity: 1; transform: scale(1.04); } }
+    @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes orbitSpinReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes sparkFlare { 0%, 100% { transform: scale(0.85); opacity: 0.65; } 50% { transform: scale(1.25); opacity: 1; } }
+    @keyframes handReachLeft { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(9px, -5px); } }
+    @keyframes handReachRight { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(-9px, 5px); } }
+    @keyframes drawFlow { to { stroke-dashoffset: -120; } }
+
+    .svg-2k-art {
+      width: 100%;
+      height: 100%;
+      display: block;
+      shape-rendering: geometricPrecision;
+    }
+
+    /* Clases de layout adaptables */
+    .slide-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .slide-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+      z-index: 2;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .flex-row-2 {
+      display: flex;
+      gap: 36px;
+      flex-grow: 1;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .flex-cards-3 {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      z-index: 2;
+    }
+
+    .flex-cards-4 {
+      display: flex;
+      gap: 18px;
+      width: 100%;
+      align-items: stretch;
+      z-index: 2;
+    }
+
+    .art-box {
+      flex: 0.85;
+      height: 400px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .art-box-cover {
+      flex: 0.82;
+      height: 430px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dynamic Island Dock */
+    #apple-dock {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(20, 17, 24, 0.84);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(244, 156, 187, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      max-width: 94vw;
+    }
+
+    .dock-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .dock-btn:hover, .dock-btn:active {
+      background: var(--pink-primary);
+      color: #161418;
+      transform: scale(1.08);
+    }
+
+    .dock-pill {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--pink-primary);
+      padding: 0 6px;
+      min-width: 82px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .progress-track {
+      width: 130px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f49cbb, #ffffff);
+      width: 6.66%;
+      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      border-radius: 999px;
+    }
+
+    .reveal-btn {
+      background: rgba(244, 156, 187, 0.2);
+      border: 1px solid #f49cbb;
+      color: #f49cbb;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+    }
+
+    .reveal-btn:hover, .reveal-btn:active {
+      background: #f49cbb;
+      color: #161418;
+    }
+
+    .hidden-answer {
+      opacity: 0;
+      filter: blur(6px);
+      transition: all 0.4s ease;
+      pointer-events: none;
+    }
+
+    .hidden-answer.shown {
+      opacity: 1;
+      filter: blur(0);
+      pointer-events: auto;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    /* ==================== MODO RESPONSIVE PARA TELÉFONOS Y TABLETS EN VERTICAL ==================== */
+    @media (max-width: 860px) and (orientation: portrait) {
+      #stage {
+        width: 100vw !important;
+        height: 100dvh !important;
+        transform: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+
+      .slide {
+        width: 100vw !important;
+        height: 100dvh !important;
+        padding: 22px 20px 96px 20px !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        justify-content: flex-start !important;
+        gap: 18px !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .flex-row-2,
+      .flex-cards-3,
+      .flex-cards-4 {
+        flex-direction: column !important;
+        gap: 16px !important;
+        align-items: stretch !important;
+      }
+
+      .hero-title {
+        font-size: 46px !important;
+        line-height: 0.98 !important;
+      }
+
+      .section-hero-title {
+        font-size: 42px !important;
+        line-height: 0.98 !important;
+      }
+
+      .slide-h2 {
+        font-size: 26px !important;
+      }
+
+      .slide-h2 span.editorial-script {
+        font-size: 32px !important;
+      }
+
+      .hero-script {
+        font-size: 26px !important;
+      }
+
+      .art-box, .art-box-cover {
+        flex: none !important;
+        width: 100% !important;
+        height: 250px !important;
+        border-radius: 26px !important;
+      }
+
+      .art-box svg, .art-box-cover svg {
+        border-radius: 18px !important;
+      }
+
+      .apple-glass-dark, .apple-glass-light, .apple-glass-pink {
+        padding: 20px !important;
+        border-radius: 20px !important;
+      }
+
+      .bg-watermark {
+        font-size: 110px !important;
+      }
+
+      .progress-track {
+        width: 75px;
+      }
+
+      .hide-mobile-arrow {
+        display: none !important;
+      }
+
+      .wave-divider {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="stage">
+  <canvas id="math-particles" width="1280" height="720"></canvas>
+
+  <!-- ==================== SLIDE 1: PORTADA EDITORIAL DARK GLASS ==================== -->
+  <section class="slide active" style="background: radial-gradient(circle at 68% 42%, #3d212e 0%, #151318 55%, #0a090c 100%); justify-content:space-between;">
+    <div class="ambient-orb" style="width: 440px; height: 440px; background: rgba(244, 156, 187, 0.24); top: -80px; right: 120px;"></div>
+    <div class="ambient-orb" style="width: 340px; height: 340px; background: rgba(184, 59, 104, 0.22); bottom: -60px; left: 80px; animation-delay: -5s;"></div>
+    <div class="orbital-ring" style="width: 680px; height: 680px; right: -120px; top: 20px;"></div>
+    <div class="bg-watermark" style="top: 120px; left: -30px; color: #f49cbb;">Exacto</div>
+
+    <div class="anim-item slide-header-bar">
+      <span class="apple-glass-dark" style="padding: 8px 16px; border-radius: 999px; font-size:12px; letter-spacing:2px; color:#f49cbb; font-weight:700;">
+        [ SOFÍA JIMENA · 3.° SECUNDARIA ]
+      </span>
+      <span class="apple-glass-dark" style="padding: 8px 16px; border-radius: 999px; font-size:12px; letter-spacing:2px; color:#e4e4e7; font-weight:600;">
+        [ 6 HORAS · LUNES · MARTES · JUEVES ]
+      </span>
+    </div>
+
+    <div class="flex-row-2" style="padding:8px 0;">
+      <div style="flex:1.18; display:flex; flex-direction:column; gap:14px;">
+        <h1 class="heavy-display hero-title anim-item delay-1" style="font-size:82px; line-height:0.93; color:#f49cbb;">
+          <span class="shimmer-text">MÉTODO</span><br><span style="color:#ffffff;">EXACTO</span>
+        </h1>
+        <p class="editorial-script hero-script anim-item delay-2" style="font-size:37px; color:#f9d5e2; line-height:1.12; margin:2px 0 6px 0;">
+          Guía didáctica de álgebra, conteo y probabilidad sin nervios
+        </p>
+        <div class="apple-glass-dark anim-item delay-3" style="padding: 18px 24px; max-width: 550px;">
+          <p style="font-size:17px; color:#e4e4e7; line-height:1.5;">
+            De la duda a la seguridad total: pasos claros, ejemplos verificados en tu cuaderno y práctica guiada paso a paso.
+          </p>
+        </div>
+      </div>
+
+      <div class="apple-glass-dark anim-item delay-2 float-slow art-box-cover" style="border-radius:190px 190px 28px 28px;">
+        <!-- Ilustración Vectorial 2K: Busto Escultórico Neoclásico & Astrolabio Cósmico -->
+        <svg class="svg-2k-art" viewBox="0 0 800 960" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:176px 176px 18px 18px; background: radial-gradient(circle at 50% 38%, #361a29 0%, #120f16 68%, #08070b 100%);">
+          <defs>
+            <linearGradient id="bustMarble" x1="260" y1="220" x2="540" y2="780" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.92"/>
+              <stop offset="45%" stop-color="#f9d5e2" stop-opacity="0.72"/>
+              <stop offset="85%" stop-color="#b83b68" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#161418" stop-opacity="0.1"/>
+            </linearGradient>
+            <linearGradient id="glassEdge1" x1="200" y1="200" x2="600" y2="750" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+              <stop offset="50%" stop-color="#f49cbb" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#b83b68" stop-opacity="0.2"/>
+            </linearGradient>
+            <radialGradient id="coreGlow1" cx="50%" cy="42%" r="48%">
+              <stop offset="0%" stop-color="#f49cbb" stop-opacity="0.78"/>
+              <stop offset="55%" stop-color="#b83b68" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#120f16" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="400" cy="420" r="320" fill="url(#coreGlow1)" style="animation: pulseGlow 6s ease-in-out infinite;"/>
+          <g style="transform-origin: 400px 420px; animation: orbitSpin 34s linear infinite;">
+            <circle cx="400" cy="420" r="285" stroke="url(#glassEdge1)" stroke-width="1.6" stroke-dasharray="12 14"/>
+            <circle cx="400" cy="135" r="9" fill="#ffffff"/>
+            <circle cx="400" cy="705" r="7" fill="#f49cbb"/>
+          </g>
+          <g style="transform-origin: 400px 420px; animation: orbitSpinReverse 26s linear infinite;">
+            <ellipse cx="400" cy="420" rx="325" ry="118" transform="rotate(-24 400 420)" stroke="#f49cbb" stroke-width="1.6" stroke-opacity="0.6"/>
+            <ellipse cx="400" cy="420" rx="325" ry="118" transform="rotate(24 400 420)" stroke="#ffffff" stroke-width="1.2" stroke-opacity="0.45"/>
+          </g>
+          <g style="animation: gentleFloat 5s ease-in-out infinite alternate;">
+            <path d="M355 235 C 325 225, 295 255, 305 290 C 280 305, 275 345, 295 375 C 278 400, 285 440, 312 460 L 350 455 Z" fill="#f49cbb" fill-opacity="0.32" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.65"/>
+            <circle cx="332" cy="268" r="24" fill="url(#bustMarble)" fill-opacity="0.45" stroke="#ffffff" stroke-width="1.2"/>
+            <circle cx="308" cy="312" r="26" fill="url(#bustMarble)" fill-opacity="0.4" stroke="#f49cbb" stroke-width="1.2"/>
+            <circle cx="304" cy="364" r="24" fill="url(#bustMarble)" fill-opacity="0.35" stroke="#ffffff" stroke-width="1.2"/>
+            <path d="M 355 235 C 405 225, 455 255, 468 302 L 495 362 C 500 372, 492 380, 480 382 L 486 396 C 488 402, 480 407, 474 409 L 482 422 C 484 429, 476 435, 468 437 C 476 448, 472 466, 454 472 C 434 478, 418 474, 412 486 L 418 565 C 475 588, 535 635, 558 725 L 242 725 C 265 635, 315 590, 352 565 L 354 478 C 332 462, 322 420, 328 365 C 332 315, 336 265, 355 235 Z" fill="url(#bustMarble)" stroke="url(#glassEdge1)" stroke-width="2.4"/>
+            <path d="M 415 265 C 435 310, 442 380, 412 475" stroke="#ffffff" stroke-width="1.4" stroke-opacity="0.55" fill="none"/>
+            <path d="M 438 332 Q 452 326, 465 334" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-opacity="0.85"/>
+            <path d="M 442 344 Q 453 350, 463 343" stroke="#f49cbb" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M 310 610 Q 400 665, 495 605" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.5" fill="none"/>
+            <path d="M 285 655 Q 400 715, 520 650" stroke="#f49cbb" stroke-width="1.8" stroke-opacity="0.65" fill="none"/>
+          </g>
+          <polygon points="400,145 432,190 400,220 368,190" fill="#ffffff" fill-opacity="0.45" stroke="#ffffff" stroke-width="1.8"/>
+          <path d="M585 245 L590 265 L610 270 L590 275 L585 295 L580 275 L560 270 L580 265 Z" fill="#ffffff" style="animation: sparkFlare 3s ease-in-out infinite;"/>
+          <path d="M215 530 L219 544 L233 548 L219 552 L215 566 L211 552 L197 548 L211 544 Z" fill="#f49cbb" style="animation: sparkFlare 4s ease-in-out infinite 1s;"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="anim-item delay-4 slide-header-bar" style="border-top:1px solid rgba(244,156,187,0.3); padding-top:14px;">
+      <p style="font-size:13px; letter-spacing:3px; color:#f49cbb; font-weight:700;">[ COMPRENSIÓN ]</p>
+      <p style="font-size:13px; letter-spacing:2px; color:#d4d4d8;">✦ APUNTES OFICIALES DE CLASE ✦</p>
+      <p style="font-size:13px; letter-spacing:3px; color:#f49cbb; font-weight:700;">[ PRECISIÓN ]</p>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 2: ESTRUCTURA DE LAS 3 SESIONES ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 85% 15%, #f9c5d8 0%, #faf5f7 52%, #efe6eb 100%); color:#161518;">
+    <div class="ambient-orb" style="width: 480px; height: 480px; background: rgba(244, 156, 187, 0.45); top: -80px; right: 50px;"></div>
+    <div class="bg-watermark" style="bottom: -30px; left: 20px; color: #b83b68;">Sesiones</div>
+
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(22,21,24,0.2);">
+      <div>
+        <p style="font-size:13px; letter-spacing:2.5px; color:#b83b68; font-weight:800; margin-bottom:6px;">
+          [ RUTA DE REGULARIZACIÓN · 2 HORAS POR DÍA ]
+        </p>
+        <h2 class="heavy-display slide-h2" style="font-size:40px; color:#161518;">
+          ESTRUCTURA <span class="editorial-script" style="text-transform:none; font-size:46px; color:#b83b68;">de las 3 sesiones</span>
+        </h2>
+      </div>
+      <span class="apple-glass-light" style="padding:10px 18px; border-radius:999px; font-size:14px; color:#3f3f46; font-weight:700;">
+        45 min teoría · 55 min práctica · 20 min reto
+      </span>
+    </div>
+
+    <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; gap:22px; z-index:2;">
+      <div class="flex-cards-3">
+        <div class="apple-glass-light anim-item delay-1" style="flex:1; padding:28px;">
+          <p style="font-size:13px; color:#b83b68; font-weight:800; letter-spacing:1.8px; margin-bottom:10px;">[ HOY LUNES · 2 HRS ]</p>
+          <h3 class="heavy-display" style="font-size:22px; color:#161518; margin-bottom:12px;">BLOQUE I: ÁLGEBRA</h3>
+          <p style="font-size:17px; color:#3f3f46; line-height:1.5;">Productos notables (cuadrado, conjugados, cubo) y 4 métodos de factorización.</p>
+        </div>
+
+        <div class="apple-glass-light anim-item delay-2" style="flex:1; padding:28px;">
+          <p style="font-size:13px; color:#b83b68; font-weight:800; letter-spacing:1.8px; margin-bottom:10px;">[ MARTES · 2 HRS ]</p>
+          <h3 class="heavy-display" style="font-size:22px; color:#161518; margin-bottom:12px;">BLOQUE II: CONTEO</h3>
+          <p style="font-size:17px; color:#3f3f46; line-height:1.5;">Árbol de decisiones, Permutaciones, Variaciones y Combinaciones.</p>
+        </div>
+
+        <div class="apple-glass-light anim-item delay-3" style="flex:1; padding:28px;">
+          <p style="font-size:13px; color:#b83b68; font-weight:800; letter-spacing:1.8px; margin-bottom:10px;">[ JUEVES · 2 HRS ]</p>
+          <h3 class="heavy-display" style="font-size:22px; color:#161518; margin-bottom:12px;">BLOQUE III: AZAR</h3>
+          <p style="font-size:17px; color:#3f3f46; line-height:1.5;">Espacio muestral, Ley de Laplace, Condicional y Simulacro Final.</p>
+        </div>
+      </div>
+
+      <div class="apple-glass-pink anim-item delay-4" style="padding:22px 28px; display:flex; justify-content:space-between; align-items:center; background: rgba(252, 231, 239, 0.85);">
+        <p style="font-size:18px; color:#161518;">
+          <b style="color:#b83b68;">✦ Dinámica para Sofía:</b> Entender el porqué de cada fórmula antes de calcular para ganar absoluta confianza.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 3: DIVISOR DÍA 1 - LUNES ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 25% 50%, #361b29 0%, #141118 58%, #0a090c 100%); justify-content:space-between;">
+    <div class="bg-watermark" style="top: 180px; right: 20px; color: #f49cbb;">Álgebra</div>
+
+    <div class="anim-item slide-header-bar">
+      <p style="font-size:14px; letter-spacing:3px; color:#f49cbb; font-weight:800;">[ SESIÓN 01 · LUNES · 120 MINUTOS ]</p>
+      <p style="font-size:14px; letter-spacing:2px; color:#a1a1aa; font-weight:600;">[ ÁLGEBRA SIMBÓLICA ]</p>
+    </div>
+
+    <div class="flex-row-2">
+      <div style="flex:1.15; display:flex; flex-direction:column; gap:14px;">
+        <h2 class="heavy-display section-hero-title anim-item delay-1" style="font-size:66px; line-height:0.94; color:#ffffff;">
+          BLOQUE I:<br><span style="color:#f49cbb;">ÁLGEBRA</span>
+        </h2>
+        <p class="editorial-script hero-script anim-item delay-2" style="font-size:36px; color:#f9d5e2;">
+          expandir productos notables y factorizar al revés
+        </p>
+        <div class="apple-glass-dark anim-item delay-3" style="padding:22px 26px; margin-top:8px; border-left: 4px solid #f49cbb;">
+          <p style="font-size:18px; color:#f4f4f5; line-height:1.6;">
+            <b style="color:#f49cbb;">Hora 1:</b> Binomio al cuadrado, conjugados y cubo.<br>
+            <b style="color:#f49cbb;">Hora 2:</b> Factor común, agrupación, trinomio y diferencia de cuadrados.
+          </p>
+        </div>
+      </div>
+
+      <div class="apple-glass-dark anim-item delay-2 float-slow art-box" style="border-radius:160px 28px 160px 28px;">
+        <!-- Ilustración Vectorial 2K: La Creación de la Fórmula -->
+        <svg class="svg-2k-art" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:148px 18px 148px 18px; background: radial-gradient(circle at 50% 48%, #331827 0%, #110e15 74%, #08070b 100%);">
+          <defs>
+            <linearGradient id="handGlowL" x1="80" y1="300" x2="380" y2="430" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#b83b68" stop-opacity="0.25"/>
+              <stop offset="60%" stop-color="#f49cbb" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.98"/>
+            </linearGradient>
+            <linearGradient id="handGlowR" x1="720" y1="490" x2="420" y2="390" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#b83b68" stop-opacity="0.25"/>
+              <stop offset="60%" stop-color="#f49cbb" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.98"/>
+            </linearGradient>
+            <radialGradient id="sparkCenter" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="35%" stop-color="#f49cbb" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#b83b68" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="400" cy="400" r="290" stroke="#f49cbb" stroke-opacity="0.16" stroke-width="1.5"/>
+          <circle cx="400" cy="400" r="200" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.2" stroke-dasharray="8 10"/>
+          <g style="transform-origin: 400px 400px; animation: orbitSpin 48s linear infinite;" opacity="0.55">
+            <polygon points="400,250 530,325 400,400 270,325" fill="#ffffff" fill-opacity="0.15" stroke="#ffffff" stroke-width="1.5"/>
+            <polygon points="270,325 400,400 400,550 270,475" fill="#f49cbb" fill-opacity="0.18" stroke="#f49cbb" stroke-width="1.5"/>
+            <polygon points="400,400 530,325 530,475 400,550" fill="#b83b68" fill-opacity="0.18" stroke="#f49cbb" stroke-width="1.5"/>
+          </g>
+          <g style="animation: handReachLeft 4.5s ease-in-out infinite;">
+            <path d="M 60 275 C 135 290, 195 305, 248 312 C 285 316, 322 332, 358 358 C 368 365, 364 376, 352 374 C 320 366, 292 356, 272 356 C 295 372, 322 392, 336 406 C 343 413, 335 422, 325 416 C 302 402, 280 386, 260 378 C 278 396, 298 416, 308 428 C 314 435, 306 443, 297 436 C 276 420, 256 402, 238 394 C 250 412, 262 428, 268 438 C 273 445, 264 452, 256 444 C 232 420, 205 392, 175 378 C 135 360, 95 352, 60 348 Z" fill="url(#handGlowL)" stroke="#ffffff" stroke-width="2"/>
+          </g>
+          <g style="animation: handReachRight 4.5s ease-in-out infinite;">
+            <path d="M 740 525 C 665 510, 605 495, 552 488 C 515 484, 478 468, 442 442 C 432 435, 436 424, 448 426 C 480 434, 508 444, 528 444 C 505 428, 478 408, 464 394 C 457 387, 465 378, 475 384 C 498 398, 520 414, 540 422 C 522 404, 502 384, 492 372 C 486 365, 494 357, 503 364 C 524 380, 544 398, 562 406 C 550 388, 538 372, 532 362 C 527 355, 536 348, 544 356 C 568 380, 595 408, 625 422 C 665 440, 705 448, 740 452 Z" fill="url(#handGlowR)" stroke="#ffffff" stroke-width="2"/>
+          </g>
+          <circle cx="400" cy="400" r="68" fill="url(#sparkCenter)" style="transform-origin: 400px 400px; animation: sparkFlare 2.8s ease-in-out infinite;"/>
+          <path d="M400 355 L407 393 L445 400 L407 407 L400 445 L393 407 L355 400 L393 393 Z" fill="#ffffff" style="transform-origin: 400px 400px; animation: sparkFlare 2.8s ease-in-out infinite;"/>
+          <text x="400" y="215" text-anchor="middle" fill="#f9d5e2" font-family="Cormorant Garamond, serif" font-style="italic" font-size="34" opacity="0.9">(a ± b)² = a² ± 2ab + b²</text>
+        </svg>
+      </div>
+    </div>
+
+    <svg class="wave-divider" width="1160" height="24" viewBox="0 0 1160 24" fill="none" style="z-index:2;">
+      <path d="M0 12 Q 145 2, 290 12 T 580 12 T 870 12 T 1160 12" stroke="#f49cbb" stroke-width="1.5" fill="none" opacity="0.6"></path>
+    </svg>
+  </section>
+
+  <!-- ==================== SLIDE 4: LUNES TEMA 1 - BINOMIO AL CUADRADO ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 15% 80%, #f8d4e2 0%, #faf6f8 55%, #f2eaee 100%); color:#161518;">
+    <div class="ambient-orb" style="width: 380px; height: 380px; background: rgba(244, 156, 187, 0.35); bottom: -40px; left: 40px;"></div>
+
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(22,21,24,0.2);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#161518;">
+        BINOMIO <span class="editorial-script" style="text-transform:none; font-size:44px; color:#b83b68;">al cuadrado</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#b83b68; font-weight:800;">[ LUNES · MINUTOS 0–20 ]</p>
+    </div>
+
+    <div class="flex-row-2">
+      <div class="apple-glass-light anim-item delay-1" style="flex:1; padding:32px;">
+        <p style="font-size:13px; color:#b83b68; font-weight:800; letter-spacing:1.5px; margin-bottom:10px;">[ REGLA DE 3 PASOS ]</p>
+        <div style="font-size:24px; color:#161518; font-weight:700; margin-bottom:20px; background:rgba(255,255,255,0.7); padding:14px 18px; border-radius:16px;">
+          <math display="math">
+            <msup><mfenced><mrow><mi>a</mi><mo>±</mo><mi>b</mi></mrow></mfenced><mn>2</mn></msup>
+            <mo>=</mo>
+            <msup><mi>a</mi><mn>2</mn></msup><mo>±</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup>
+          </math>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:14px; font-size:18px; color:#161518;">
+          <p><b>1. Cuadrado del 1.°:</b> Eleva al cuadrado el primer término.</p>
+          <p><b>2. Doble del 1.° por 2.°:</b> Multiplica ambos y duplica el resultado.</p>
+          <p><b>3. Cuadrado del 2.°:</b> Siempre resulta positivo.</p>
+        </div>
+      </div>
+
+      <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+        <div class="apple-glass-pink anim-item delay-2" style="padding:26px; background: rgba(252, 231, 239, 0.85);">
+          <p style="font-size:13px; color:#b83b68; font-weight:800; margin-bottom:8px;">[ EJEMPLO DE TU CUADERNO ]</p>
+          <p style="font-size:20px; color:#161518; font-weight:700; margin-bottom:10px;">
+            <math display="math"><msup><mfenced><mrow><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup><mi>y</mi><mo>-</mo><mn>4</mn><msup><mi>x</mi><mn>2</mn></msup><msup><mi>y</mi><mn>3</mn></msup></mrow></mfenced><mn>2</mn></msup></math>
+          </p>
+          <p style="font-size:19px; color:#b83b68; font-weight:700;">
+            <math display="math"><mo>=</mo><mn>9</mn><msup><mi>x</mi><mn>4</mn></msup><msup><mi>y</mi><mn>2</mn></msup><mo>-</mo><mn>24</mn><msup><mi>x</mi><mn>4</mn></msup><msup><mi>y</mi><mn>4</mn></msup><mo>+</mo><mn>16</mn><msup><mi>x</mi><mn>4</mn></msup><msup><mi>y</mi><mn>6</mn></msup></math>
+          </p>
+        </div>
+
+        <div class="apple-glass-light anim-item delay-3" style="padding:24px; border:1px dashed #b83b68;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;">
+            <p style="font-size:13px; color:#161518; font-weight:800;">[ RETO PARA SOFÍA EN CLASE ]</p>
+            <button class="reveal-btn" style="color:#b83b68; border-color:#b83b68;" onclick="toggleAnswer(this)">
+              <i class="fa-solid fa-eye"></i> Ver solución
+            </button>
+          </div>
+          <p style="font-size:18px; color:#3f3f46;">
+            Resuelve: <math display="math"><msup><mfenced><mrow><mn>5</mn><msup><mi>m</mi><mn>3</mn></msup><mo>-</mo><mn>2</mn><mi>n</mi></mrow></mfenced><mn>2</mn></msup></math><br>
+            <span class="hidden-answer" style="display:inline-block; margin-top:6px; color:#b83b68; font-weight:700;">
+              → <math display="math"><mn>25</mn><msup><mi>m</mi><mn>6</mn></msup><mo>-</mo><mn>20</mn><msup><mi>m</mi><mn>3</mn></msup><mi>n</mi><mo>+</mo><mn>4</mn><msup><mi>n</mi><mn>2</mn></msup></math>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 5: LUNES TEMA 2 - BINOMIOS CONJUGADOS ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 80% 25%, #2f1a26 0%, #121016 58%, #0a090c 100%);">
+    <div class="ambient-orb" style="width: 400px; height: 400px; background: rgba(244, 156, 187, 0.2); top: 20px; right: 60px;"></div>
+
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(244,156,187,0.3);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#ffffff;">
+        BINOMIOS <span class="editorial-script" style="text-transform:none; font-size:44px; color:#f49cbb;">conjugados</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#f49cbb; font-weight:700;">[ LUNES · MINUTOS 20–35 ]</p>
+    </div>
+
+    <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; gap:24px; z-index:2;">
+      <div class="flex-cards-3">
+        <div class="apple-glass-dark anim-item delay-1" style="padding:26px; flex:1;">
+          <h3 style="font-size:19px; color:#f49cbb; margin-bottom:10px;">¿Cómo identificarlos?</h3>
+          <p style="font-size:17px; color:#e4e4e7; line-height:1.5;">Mismos términos, pero un binomio suma y el otro resta.</p>
+        </div>
+        <div class="apple-glass-dark anim-item delay-2" style="padding:26px; flex:1;">
+          <h3 style="font-size:19px; color:#f49cbb; margin-bottom:10px;">Fórmula Directa</h3>
+          <div style="font-size:22px; color:#ffffff; font-weight:700;">
+            <math display="math"><mfenced><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></mfenced><mfenced><mrow><mi>a</mi><mo>-</mo><mi>b</mi></mrow></mfenced><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mo>-</mo><msup><mi>b</mi><mn>2</mn></msup></math>
+          </div>
+        </div>
+        <div class="apple-glass-dark anim-item delay-3" style="padding:26px; flex:1;">
+          <h3 style="font-size:19px; color:#f49cbb; margin-bottom:10px;">Resultado</h3>
+          <p style="font-size:17px; color:#e4e4e7; line-height:1.5;">Siempre genera una Diferencia de Cuadrados exacta.</p>
+        </div>
+      </div>
+
+      <div class="apple-glass-pink anim-item delay-4" style="padding:28px 32px; display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;">
+        <div>
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; letter-spacing:1.5px; margin-bottom:8px;">[ CUIDADO CON EL ORDEN EN EL EXAMEN ]</p>
+          <p style="font-size:22px; color:#ffffff; font-weight:700;">
+            <math display="math"><mfenced><mrow><mn>6</mn><mi>x</mi><mo>+</mo><mn>7</mn><mi>y</mi></mrow></mfenced><mfenced><mrow><mo>-</mo><mn>6</mn><mi>x</mi><mo>+</mo><mn>7</mn><mi>y</mi></mrow></mfenced><mo>=</mo><mn>49</mn><msup><mi>y</mi><mn>2</mn></msup><mo>-</mo><mn>36</mn><msup><mi>x</mi><mn>2</mn></msup></math>
+          </p>
+        </div>
+        <p style="font-size:17px; color:#f9d5e2; max-width:350px; line-height:1.5;">
+          El término que <b>no cambia de signo</b> (<math display="math"><mn>7</mn><mi>y</mi></math>) manda al inicio con signo positivo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 6: LUNES TEMA 3 - BINOMIO AL CUBO ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 85% 80%, #f8d4e2 0%, #faf6f8 55%, #f3eef1 100%); color:#161518;">
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(22,21,24,0.2);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#161518;">
+        BINOMIO <span class="editorial-script" style="text-transform:none; font-size:44px; color:#b83b68;">al cubo</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#b83b68; font-weight:800;">[ LUNES · MINUTOS 35–60 ]</p>
+    </div>
+
+    <div class="flex-row-2">
+      <div style="flex:1.05; display:flex; flex-direction:column; gap:18px;">
+        <div class="apple-glass-light anim-item delay-1" style="padding:24px;">
+          <p style="font-size:13px; color:#b83b68; font-weight:800; margin-bottom:8px;">[ SIEMPRE 4 TÉRMINOS ]</p>
+          <div style="font-size:21px; color:#161518; font-weight:700; margin-bottom:10px;">
+            <math display="math"><msup><mfenced><mrow><mi>a</mi><mo>-</mo><mi>b</mi></mrow></mfenced><mn>3</mn></msup><mo>=</mo><msup><mi>a</mi><mn>3</mn></msup><mo>-</mo><mn>3</mn><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi><mo>+</mo><mn>3</mn><mi>a</mi><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><msup><mi>b</mi><mn>3</mn></msup></math>
+          </div>
+          <p style="font-size:17px; color:#3f3f46;">En binomio con resta, los signos alternan: <b style="color:#b83b68;">+ , − , + , −</b></p>
+        </div>
+
+        <div class="apple-glass-pink anim-item delay-2" style="padding:24px; background: rgba(252, 231, 239, 0.85);">
+          <h3 style="font-size:18px; color:#b83b68; margin-bottom:8px;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Nota aclaratoria de tu libreta
+          </h3>
+          <p style="font-size:17px; color:#161518; line-height:1.5;">
+            En tu ejercicio de fracciones desarrollaste bien los 4 pasos, pero recuerda anotar completos los 4 términos en el resultado final.
+          </p>
+        </div>
+      </div>
+
+      <div class="apple-glass-light anim-item delay-3" style="flex:0.95; padding:28px;">
+        <p style="font-size:13px; color:#b83b68; font-weight:800; margin-bottom:10px;">[ EJERCICIO DE FRACCIONES PASO A PASO ]</p>
+        <div style="font-size:19px; color:#161518; font-weight:700; margin-bottom:16px; background:rgba(255,255,255,0.75); padding:12px 16px; border-radius:14px;">
+          <math display="math"><msup><mfenced><mrow><mfrac><mn>1</mn><mn>3</mn></mfrac><msup><mi>x</mi><mn>2</mn></msup><mi>y</mi><mo>-</mo><mfrac><mn>2</mn><mn>5</mn></mfrac><msup><mi>a</mi><mn>2</mn></msup><msup><mi>b</mi><mn>2</mn></msup></mrow></mfenced><mn>3</mn></msup></math>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:18px; color:#161518;">
+          <p><b>1.°</b> <math display="math"><mfrac><mn>1</mn><mn>27</mn></mfrac><msup><mi>x</mi><mn>6</mn></msup><msup><mi>y</mi><mn>3</mn></msup></math></p>
+          <p><b>2.°</b> <math display="math"><mo>-</mo><mfrac><mn>2</mn><mn>15</mn></mfrac><msup><mi>a</mi><mn>2</mn></msup><msup><mi>b</mi><mn>2</mn></msup><msup><mi>x</mi><mn>4</mn></msup><msup><mi>y</mi><mn>2</mn></msup></math></p>
+          <p><b>3.°</b> <math display="math"><mo>+</mo><mfrac><mn>4</mn><mn>25</mn></mfrac><msup><mi>a</mi><mn>4</mn></msup><msup><mi>b</mi><mn>4</mn></msup><msup><mi>x</mi><mn>2</mn></msup><mi>y</mi></math></p>
+          <p><b>4.°</b> <math display="math"><mo>-</mo><mfrac><mn>8</mn><mn>125</mn></mfrac><msup><mi>a</mi><mn>6</mn></msup><msup><mi>b</mi><mn>6</mn></msup></math></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 7: LUNES HORA 2 - 4 MÉTODOS DE FACTORIZACIÓN ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 50% 15%, #381d2b 0%, #131117 58%, #0a090c 100%);">
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(244,156,187,0.3);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#ffffff;">
+        4 MÉTODOS <span class="editorial-script" style="text-transform:none; font-size:44px; color:#f49cbb;">de factorización</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#f49cbb; font-weight:700;">[ LUNES · HORA 2 ]</p>
+    </div>
+
+    <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; gap:24px; z-index:2;">
+      <div class="flex-cards-4">
+        <div class="apple-glass-dark anim-item delay-1" style="padding:24px; flex:1;">
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; margin-bottom:8px;">[ 01 · TODOS ]</p>
+          <h3 style="font-size:20px; color:#ffffff; margin-bottom:10px;">Factor Común</h3>
+          <p style="font-size:16px; color:#d4d4d8; line-height:1.5;">MCD y letra repetida con menor exponente.</p>
+        </div>
+
+        <div class="apple-glass-dark anim-item delay-2" style="padding:24px; flex:1;">
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; margin-bottom:8px;">[ 02 · 4 TÉRMINOS ]</p>
+          <h3 style="font-size:20px; color:#ffffff; margin-bottom:10px;">Agrupación</h3>
+          <p style="font-size:16px; color:#d4d4d8; line-height:1.5;">Agrupar en parejas buscando paréntesis idénticos.</p>
+        </div>
+
+        <div class="apple-glass-dark anim-item delay-3" style="padding:24px; flex:1;">
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; margin-bottom:8px;">[ 03 · 3 TÉRMINOS ]</p>
+          <h3 style="font-size:20px; color:#ffffff; margin-bottom:10px;">Trinomio TCP</h3>
+          <p style="font-size:16px; color:#d4d4d8; line-height:1.5;">Raíces exactas en extremos y doble producto al centro.</p>
+        </div>
+
+        <div class="apple-glass-dark anim-item delay-4" style="padding:24px; flex:1;">
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; margin-bottom:8px;">[ 04 · 2 RESTA ]</p>
+          <h3 style="font-size:20px; color:#ffffff; margin-bottom:10px;">Dif. Cuadrados</h3>
+          <p style="font-size:16px; color:#d4d4d8; line-height:1.5;">Raíces cuadradas expresadas en binomios conjugados.</p>
+        </div>
+      </div>
+
+      <div class="apple-glass-pink anim-item delay-4" style="padding:22px 28px; display:flex; justify-content:space-between; align-items:center;">
+        <p style="font-size:19px; color:#ffffff;">
+          <b style="color:#f49cbb;">Ejemplo Agrupación:</b> <math display="math"><mi>a</mi><mi>x</mi><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>a</mi><mi>y</mi><mo>+</mo><mi>b</mi><mi>y</mi><mo>=</mo><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo></math>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 8: DIVISOR DÍA 2 - MARTES ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 75% 50%, #f9c5d8 0%, #faf5f7 55%, #efe6eb 100%); color:#161518; justify-content:space-between;">
+    <div class="bg-watermark" style="bottom: 40px; left: 40px; color: #b83b68;">Conteo</div>
+
+    <div class="anim-item slide-header-bar">
+      <p style="font-size:14px; letter-spacing:3px; color:#b83b68; font-weight:800;">[ SESIÓN 02 · MARTES · 120 MINUTOS ]</p>
+      <p style="font-size:14px; letter-spacing:2px; color:#52525b; font-weight:700;">[ ANÁLISIS COMBINATORIO ]</p>
+    </div>
+
+    <div class="flex-row-2">
+      <div class="apple-glass-light anim-item delay-1 float-slow art-box" style="border-radius:28px 160px 28px 160px;">
+        <!-- Ilustración Vectorial 2K: Silueta Humana Pensante & Red Neuronal Combinatoria -->
+        <svg class="svg-2k-art" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:18px 148px 18px 148px; background: radial-gradient(circle at 38% 40%, #ffffff 0%, #fce7ef 52%, #f4c6d8 100%);">
+          <defs>
+            <linearGradient id="mindSil" x1="150" y1="180" x2="460" y2="680" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#b83b68" stop-opacity="0.22"/>
+              <stop offset="55%" stop-color="#f49cbb" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.85"/>
+            </linearGradient>
+            <linearGradient id="treeBranch" x1="340" y1="320" x2="680" y2="400" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#b83b68" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#f49cbb" stop-opacity="0.65"/>
+            </linearGradient>
+            <radialGradient id="nodeGlass" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="60%" stop-color="#f49cbb" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#b83b68" stop-opacity="0.95"/>
+            </radialGradient>
+          </defs>
+          <circle cx="330" cy="330" r="230" stroke="#b83b68" stroke-opacity="0.16" stroke-width="1.5"/>
+          <circle cx="330" cy="330" r="340" stroke="#b83b68" stroke-opacity="0.14" stroke-width="1.5" stroke-dasharray="8 10"/>
+          <path d="M 225 185 C 295 175, 365 215, 382 275 L 412 342 C 418 354, 408 364, 394 366 L 400 382 C 402 390, 392 396, 384 398 L 392 414 C 394 422, 384 428, 374 430 C 382 444, 376 464, 355 470 C 332 476, 314 472, 306 488 L 312 635 L 145 635 L 158 465 C 132 425, 128 345, 148 275 C 162 222, 185 192, 225 185 Z" fill="url(#mindSil)" stroke="#b83b68" stroke-width="2" stroke-opacity="0.55"/>
+          <g stroke="url(#treeBranch)" stroke-width="3" fill="none" stroke-dasharray="10 6" style="animation: drawFlow 8s linear infinite;">
+            <path d="M 325 305 C 410 305, 430 195, 515 195"/>
+            <path d="M 325 305 C 410 305, 430 330, 515 330"/>
+            <path d="M 325 305 C 410 305, 430 475, 515 475"/>
+            <path d="M 515 195 C 575 195, 595 145, 665 145" stroke-width="2"/>
+            <path d="M 515 195 C 575 195, 595 235, 665 235" stroke-width="2"/>
+            <path d="M 515 330 C 575 330, 595 295, 665 295" stroke-width="2"/>
+            <path d="M 515 330 C 575 330, 595 375, 665 375" stroke-width="2"/>
+            <path d="M 515 475 C 575 475, 595 440, 665 440" stroke-width="2"/>
+            <path d="M 515 475 C 575 475, 595 535, 665 535" stroke-width="2"/>
+          </g>
+          <circle cx="325" cy="305" r="32" fill="url(#nodeGlass)" stroke="#ffffff" stroke-width="3" class="node-pulse" style="transform-origin: 325px 305px;"/>
+          <text x="325" y="313" text-anchor="middle" fill="#ffffff" font-family="Syne, sans-serif" font-weight="800" font-size="22">n!</text>
+          <circle cx="515" cy="195" r="22" fill="url(#nodeGlass)" stroke="#ffffff" stroke-width="2.5" class="node-pulse" style="transform-origin: 515px 195px; animation-delay: 0.4s;"/>
+          <circle cx="515" cy="330" r="22" fill="url(#nodeGlass)" stroke="#ffffff" stroke-width="2.5" class="node-pulse" style="transform-origin: 515px 330px; animation-delay: 0.8s;"/>
+          <circle cx="515" cy="475" r="22" fill="url(#nodeGlass)" stroke="#ffffff" stroke-width="2.5" class="node-pulse" style="transform-origin: 515px 475px; animation-delay: 1.2s;"/>
+          <g fill="#ffffff" stroke="#b83b68" stroke-width="2.5">
+            <circle cx="665" cy="145" r="14"/>
+            <circle cx="665" cy="235" r="14"/>
+            <circle cx="665" cy="295" r="14"/>
+            <circle cx="665" cy="375" r="14"/>
+            <circle cx="665" cy="440" r="14"/>
+            <circle cx="665" cy="535" r="14"/>
+          </g>
+          <text x="692" y="151" fill="#b83b68" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="18">P(n)</text>
+          <text x="692" y="338" fill="#b83b68" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="18">V(n,k)</text>
+          <text x="692" y="541" fill="#b83b68" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="18">C(n,k)</text>
+        </svg>
+      </div>
+
+      <div style="flex:1.15; display:flex; flex-direction:column; gap:14px;">
+        <h2 class="heavy-display section-hero-title anim-item delay-2" style="font-size:66px; line-height:0.94; color:#161518;">
+          BLOQUE II:<br><span style="color:#b83b68;">CONTEO</span>
+        </h2>
+        <p class="editorial-script hero-script anim-item delay-3" style="font-size:36px; color:#3f3f46;">
+          ¿importa el orden o solo seleccionamos un grupo?
+        </p>
+        <div class="apple-glass-light anim-item delay-4" style="padding:22px 26px; margin-top:8px; border-left: 4px solid #b83b68;">
+          <p style="font-size:18px; color:#161518; line-height:1.6;">
+            <b style="color:#b83b68;">Hora 1:</b> Las 2 preguntas clave para elegir fórmula sin error.<br>
+            <b style="color:#b83b68;">Hora 2:</b> Permutaciones, variaciones y combinaciones con ejemplos de tus hojas.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <svg class="wave-divider" width="1160" height="24" viewBox="0 0 1160 24" fill="none" style="z-index:2;">
+      <path d="M0 12 Q 145 22, 290 12 T 580 12 T 870 12 T 1160 12" stroke="#b83b68" stroke-width="1.5" fill="none" opacity="0.6"></path>
+    </svg>
+  </section>
+
+  <!-- ==================== SLIDE 9: MARTES - EL FILTRO DE LAS 2 PREGUNTAS ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 85% 20%, #361b29 0%, #141118 58%, #0a090c 100%);">
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(244,156,187,0.3);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#ffffff;">
+        EL FILTRO <span class="editorial-script" style="text-transform:none; font-size:44px; color:#f49cbb;">de las 2 preguntas</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#f49cbb; font-weight:700;">[ MARTES · HORA 1 ]</p>
+    </div>
+
+    <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; gap:22px; z-index:2;">
+      <div class="flex-cards-3" style="align-items:center;">
+        <div class="apple-glass-pink anim-item delay-1" style="flex:1; padding:24px;">
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; margin-bottom:6px;">[ PREGUNTA 01 ]</p>
+          <h3 style="font-size:21px; color:#ffffff; margin-bottom:6px;">¿Importa el orden?</h3>
+          <p style="font-size:17px; color:#f9d5e2;">Si NO importa (equipos, sabores) → <b style="color:#ffffff;">Combinación</b>.</p>
+        </div>
+
+        <i class="fa-solid fa-arrow-right hide-mobile-arrow" style="font-size:24px; color:#f49cbb;"></i>
+
+        <div class="apple-glass-dark anim-item delay-2" style="flex:1; padding:24px;">
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; margin-bottom:6px;">[ PREGUNTA 02 ]</p>
+          <h3 style="font-size:21px; color:#ffffff; margin-bottom:6px;">¿Se usan todos?</h3>
+          <p style="font-size:17px; color:#e4e4e7;">Todos → <b style="color:#f49cbb;">Permutación</b>. Parte → <b style="color:#f49cbb;">Variación</b>.</p>
+        </div>
+      </div>
+
+      <div class="apple-glass-dark anim-item delay-3 table-scroll" style="padding:18px 26px;">
+        <table style="width:100%; border-collapse:collapse; font-size:17px; color:#ffffff; min-width:520px;">
+          <thead>
+            <tr style="border-bottom:1px solid rgba(244,156,187,0.4); text-align:left; color:#f49cbb;">
+              <th style="padding:10px;">Concepto</th>
+              <th style="padding:10px;">¿Orden?</th>
+              <th style="padding:10px;">¿Repetición?</th>
+              <th style="padding:10px;">Fórmula Exacta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+              <td style="padding:10px; font-weight:700;">Permutación</td>
+              <td style="padding:10px;">Sí (todos)</td>
+              <td style="padding:10px;">No</td>
+              <td style="padding:10px;"><math display="math"><mi>P</mi><mo>(</mo><mi>n</mi><mo>)</mo><mo>=</mo><mi>n</mi><mo>!</mo></math></td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+              <td style="padding:10px; font-weight:700;">Variación sin repetición</td>
+              <td style="padding:10px;">Sí (parte)</td>
+              <td style="padding:10px;">No</td>
+              <td style="padding:10px;"><math display="math"><mi>V</mi><mo>(</mo><mi>n</mi><mo>,</mo><mi>k</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>n</mi><mo>!</mo></mrow><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mi>k</mi><mo>)</mo><mo>!</mo></mrow></mfrac></math></td>
+            </tr>
+            <tr>
+              <td style="padding:10px; font-weight:700;">Combinación</td>
+              <td style="padding:10px;">No</td>
+              <td style="padding:10px;">No</td>
+              <td style="padding:10px;"><math display="math"><mi>C</mi><mo>(</mo><mi>n</mi><mo>,</mo><mi>k</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>n</mi><mo>!</mo></mrow><mrow><mi>k</mi><mo>!</mo><mo>(</mo><mi>n</mi><mo>-</mo><mi>k</mi><mo>)</mo><mo>!</mo></mrow></mfrac></math></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 10: MARTES HORA 2 - CASOS PRÁCTICOS ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 20% 80%, #f8d4e2 0%, #faf6f8 55%, #f3eef1 100%); color:#161518;">
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(22,21,24,0.2);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#161518;">
+        CASOS REALES <span class="editorial-script" style="text-transform:none; font-size:44px; color:#b83b68;">de tu actividad</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#b83b68; font-weight:800;">[ MARTES · HORA 2 ]</p>
+    </div>
+
+    <div class="flex-row-2">
+      <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+        <div class="apple-glass-light anim-item delay-1" style="padding:26px;">
+          <h3 style="font-size:20px; color:#b83b68; margin-bottom:8px;">5 alumnos en fila</h3>
+          <p style="font-size:19px; color:#161518;">Permutación lineal: <math display="math"><mn>5</mn><mo>!</mo><mo>=</mo><mn>120</mn></math> formas.</p>
+        </div>
+
+        <div class="apple-glass-light anim-item delay-2" style="padding:26px;">
+          <h3 style="font-size:20px; color:#b83b68; margin-bottom:8px;">Podio 1.°, 2.° y 3.° (10 atletas)</h3>
+          <p style="font-size:19px; color:#161518;">Variación sin repetición: <math display="math"><mn>10</mn><mo>×</mo><mn>9</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>720</mn></math>.</p>
+        </div>
+      </div>
+
+      <div class="apple-glass-pink anim-item delay-3" style="flex:1; padding:32px; background: rgba(252, 231, 239, 0.85);">
+        <p style="font-size:13px; color:#b83b68; font-weight:800; letter-spacing:1.5px; margin-bottom:16px;">[ CLAVES DE CLASIFICACIÓN ]</p>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:16px; font-size:18px; color:#161518;">
+          <li><b>Contraseña de 4 dígitos:</b> Variación con repetición (<math display="math"><msup><mn>10</mn><mn>4</mn></msup></math>).</li>
+          <li><b>2 sabores de helado en cono:</b> Combinación (no importa el orden).</li>
+          <li><b>Equipo de 3 sin capitán:</b> Combinación (cargos iguales).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 11: DIVISOR DÍA 3 - JUEVES ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 30% 50%, #381d2b 0%, #141118 58%, #0a090c 100%); justify-content:space-between;">
+    <div class="bg-watermark" style="top: 160px; right: 20px; color: #f49cbb;">Azar</div>
+
+    <div class="anim-item slide-header-bar">
+      <p style="font-size:14px; letter-spacing:3px; color:#f49cbb; font-weight:800;">[ SESIÓN 03 · JUEVES · 120 MINUTOS ]</p>
+      <p style="font-size:14px; letter-spacing:2px; color:#a1a1aa; font-weight:600;">[ PROBABILIDAD Y CIERRE ]</p>
+    </div>
+
+    <div class="flex-row-2">
+      <div style="flex:1.15; display:flex; flex-direction:column; gap:14px;">
+        <h2 class="heavy-display section-hero-title anim-item delay-1" style="font-size:64px; line-height:0.94; color:#ffffff;">
+          BLOQUE III:<br><span style="color:#f49cbb;">PROBABILIDAD</span>
+        </h2>
+        <p class="editorial-script hero-script anim-item delay-2" style="font-size:36px; color:#f9d5e2;">
+          medir la certeza y dominar el examen final con éxito
+        </p>
+        <div class="apple-glass-dark anim-item delay-3" style="padding:22px 26px; margin-top:8px; border-left: 4px solid #f49cbb;">
+          <p style="font-size:18px; color:#f4f4f5; line-height:1.6;">
+            <b style="color:#f49cbb;">Hora 1:</b> Espacio muestral, Ley de Laplace y probabilidad condicional.<br>
+            <b style="color:#f49cbb;">Hora 2:</b> Simulacro general de examen cubriendo los 3 bloques.
+          </p>
+        </div>
+      </div>
+
+      <div class="apple-glass-dark anim-item delay-2 float-slow art-box" style="border-radius:160px 28px 160px 28px;">
+        <!-- Ilustración Vectorial 2K: La Mano del Azar & Poliedro de Cristal en Espiral Áurea -->
+        <svg class="svg-2k-art" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:148px 18px 148px 18px; background: radial-gradient(circle at 50% 45%, #341827 0%, #120f16 72%, #08070b 100%);">
+          <defs>
+            <linearGradient id="icoFace1" x1="250" y1="180" x2="550" y2="500" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
+              <stop offset="50%" stop-color="#f49cbb" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#b83b68" stop-opacity="0.14"/>
+            </linearGradient>
+            <linearGradient id="handBottom" x1="200" y1="680" x2="600" y2="520" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#b83b68" stop-opacity="0.35"/>
+              <stop offset="55%" stop-color="#f49cbb" stop-opacity="0.78"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.95"/>
+            </linearGradient>
+            <linearGradient id="goldenArc" x1="150" y1="150" x2="650" y2="650" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+              <stop offset="50%" stop-color="#f49cbb" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#b83b68" stop-opacity="0.2"/>
+            </linearGradient>
+          </defs>
+          <path d="M 400 340 A 45 45 0 0 1 445 385 A 75 75 0 0 1 370 460 A 120 120 0 0 1 250 340 A 195 195 0 0 1 445 145 A 315 315 0 0 1 760 460" stroke="url(#goldenArc)" stroke-width="2.5" fill="none"/>
+          <circle cx="400" cy="340" r="240" stroke="#f49cbb" stroke-opacity="0.18" stroke-width="1.4" stroke-dasharray="8 12"/>
+          <g style="transform-origin: 400px 340px; animation: orbitSpin 38s linear infinite;">
+            <polygon points="400,165 550,252 550,428 400,515 250,428 250,252" fill="url(#icoFace1)" stroke="#ffffff" stroke-width="2.2" stroke-opacity="0.88"/>
+            <polygon points="400,230 495,395 305,395" fill="#f49cbb" fill-opacity="0.32" stroke="#ffffff" stroke-width="1.8"/>
+            <line x1="400" y1="165" x2="400" y2="230" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="550" y1="252" x2="400" y2="230" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="250" y1="252" x2="400" y2="230" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="550" y1="252" x2="495" y2="395" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="550" y1="428" x2="495" y2="395" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="400" y1="515" x2="495" y2="395" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="400" y1="515" x2="305" y2="395" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="250" y1="428" x2="305" y2="395" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+            <line x1="250" y1="252" x2="305" y2="395" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8"/>
+          </g>
+          <circle cx="400" cy="340" r="32" fill="#161418" fill-opacity="0.78" stroke="#f49cbb" stroke-width="1.8"/>
+          <text x="400" y="350" text-anchor="middle" fill="#f49cbb" font-family="Cormorant Garamond, serif" font-weight="600" font-size="30">Ω</text>
+          <g style="animation: gentleFloat 4s ease-in-out infinite alternate;">
+            <path d="M 190 615 C 235 585, 280 572, 325 578 C 375 585, 425 585, 475 574 C 520 564, 565 538, 602 512 C 612 505, 622 514, 614 524 C 582 560, 540 595, 490 614 C 435 634, 365 636, 305 632 L 190 665 Z" fill="url(#handBottom)" stroke="#ffffff" stroke-width="2"/>
+            <path d="M 245 578 C 275 545, 315 532, 355 536 C 366 537, 365 549, 354 551 C 322 556, 298 568, 282 582 Z" fill="#ffffff" fill-opacity="0.75" stroke="#ffffff" stroke-width="1.5"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <svg class="wave-divider" width="1160" height="24" viewBox="0 0 1160 24" fill="none" style="z-index:2;">
+      <path d="M0 12 Q 145 2, 290 12 T 580 12 T 870 12 T 1160 12" stroke="#f49cbb" stroke-width="1.5" fill="none" opacity="0.6"></path>
+    </svg>
+  </section>
+
+  <!-- ==================== SLIDE 12: JUEVES HORA 1 - ESPACIO MUESTRAL Y LAPLACE ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 15% 20%, #f8d4e2 0%, #faf6f8 55%, #f2eaee 100%); color:#161518;">
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(22,21,24,0.2);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#161518;">
+        LEY DE LAPLACE <span class="editorial-script" style="text-transform:none; font-size:44px; color:#b83b68;">y tipos de eventos</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#b83b68; font-weight:800;">[ JUEVES · MINUTOS 0–30 ]</p>
+    </div>
+
+    <div class="flex-row-2">
+      <div class="apple-glass-light anim-item delay-1" style="flex:1.1; padding:32px;">
+        <p style="font-size:13px; color:#b83b68; font-weight:800; margin-bottom:10px;">[ FÓRMULA CLÁSICA ]</p>
+        <div style="font-size:23px; color:#161518; font-weight:700; margin-bottom:22px; background:rgba(255,255,255,0.75); padding:14px 18px; border-radius:16px;">
+          <math display="math">
+            <mi>P</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>=</mo>
+            <mfrac><mtext>Casos Favorables</mtext><mtext>Casos Posibles (Ω)</mtext></mfrac>
+          </math>
+        </div>
+        <div style="display:flex; gap:16px;">
+          <div style="flex:1; background:rgba(255,255,255,0.85); padding:16px; border-radius:16px; border:1px solid rgba(22,21,24,0.12);">
+            <p style="font-size:16px; color:#52525b;">Imposible</p>
+            <p style="font-size:22px; font-weight:800; color:#161518; margin-top:4px;">0 (0%)</p>
+          </div>
+          <div class="apple-glass-pink" style="flex:1; padding:16px; border-radius:16px; background:rgba(252, 231, 239, 0.9);">
+            <p style="font-size:16px; color:#b83b68; font-weight:700;">Seguro</p>
+            <p style="font-size:22px; font-weight:800; color:#161518; margin-top:4px;">1 (100%)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="apple-glass-light anim-item delay-2" style="flex:0.9; padding:32px; display:flex; flex-direction:column; gap:16px;">
+        <h3 style="font-size:22px; color:#161518;">Tipos de Eventos (Dado)</h3>
+        <p style="font-size:18px; color:#161518;"><b>Simple:</b> Un resultado (<math display="math"><mo>{</mo><mn>5</mn><mo>}</mo></math>).</p>
+        <p style="font-size:18px; color:#161518;"><b>Compuesto:</b> Varios (<math display="math"><mo>{</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>6</mn><mo>}</mo></math>).</p>
+        <p style="font-size:18px; color:#161518;"><b>Compatibles:</b> Ocurren juntos (par y <math display="math"><mo>&gt;</mo><mn>3</mn></math>).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 13: JUEVES HORA 1 - PROBABILIDAD CONDICIONAL ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 80% 25%, #341a27 0%, #121016 58%, #0a090c 100%);">
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(244,156,187,0.3);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#ffffff;">
+        PROBABILIDAD <span class="editorial-script" style="text-transform:none; font-size:44px; color:#f49cbb;">condicional P(A|B)</span>
+      </h2>
+      <p style="font-size:14px; letter-spacing:2px; color:#f49cbb; font-weight:700;">[ JUEVES · MINUTOS 30–60 ]</p>
+    </div>
+
+    <div class="flex-row-2" style="align-items:stretch;">
+      <div class="apple-glass-dark anim-item delay-1" style="flex:1; padding:30px; display:flex; flex-direction:column; justify-content:space-between; gap:16px;">
+        <div>
+          <p style="font-size:13px; color:#f49cbb; font-weight:800; margin-bottom:8px;">[ DEPENDIENTES · SIN DEVOLUCIÓN ]</p>
+          <h3 style="font-size:24px; color:#ffffff; margin-bottom:12px;">Sucesos Dependientes</h3>
+          <p style="font-size:18px; color:#d4d4d8; line-height:1.5;">
+            Sacar sin devolver <b style="color:#ffffff;">modifica el total</b> disponible para el siguiente evento.
+          </p>
+        </div>
+        <div class="apple-glass-pink" style="padding:20px; border-radius:18px;">
+          <p style="font-size:16px; color:#f49cbb; font-weight:700; margin-bottom:6px;">Bolsa: 5 rojas, 3 azules (8 total)</p>
+          <p style="font-size:18px; color:#ffffff; font-weight:700;">
+            Sale roja → Quedan 7 → <math display="math"><mi>P</mi><mo>(</mo><mtext>Azul</mtext><mo>|</mo><mtext>Roja</mtext><mo>)</mo><mo>=</mo><mfrac><mn>3</mn><mn>7</mn></mfrac></math>
+          </p>
+        </div>
+      </div>
+
+      <div class="apple-glass-dark anim-item delay-2" style="flex:1; padding:30px; display:flex; flex-direction:column; justify-content:space-between; gap:16px;">
+        <div>
+          <p style="font-size:13px; color:#a1a1aa; font-weight:800; margin-bottom:8px;">[ INDEPENDIENTES · CON REEMPLAZO ]</p>
+          <h3 style="font-size:24px; color:#ffffff; margin-bottom:12px;">Sucesos Independientes</h3>
+          <p style="font-size:18px; color:#d4d4d8; line-height:1.5;">
+            El primer evento <b style="color:#ffffff;">no afecta</b> al segundo: <math display="math"><mi>P</mi><mo>(</mo><mi>A</mi><mo>|</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>P</mi><mo>(</mo><mi>A</mi><mo>)</mo></math>
+          </p>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); padding:20px; border-radius:18px; border:1px solid rgba(255,255,255,0.14);">
+          <p style="font-size:16px; color:#f49cbb; font-weight:700; margin-bottom:6px;">Cajas sorpresa (5 Barbies)</p>
+          <p style="font-size:18px; color:#ffffff; font-weight:700;">
+            2.ª caja separada → <math display="math"><mi>P</mi><mo>=</mo><mfrac><mn>1</mn><mn>5</mn></mfrac><mo>=</mo><mn>20</mn><mo>%</mo></math>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 14: JUEVES HORA 2 - SIMULACRO GENERAL ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 50% 85%, #f8d4e2 0%, #faf6f8 55%, #f2eaee 100%); color:#161518;">
+    <div class="anim-item slide-title-bar" style="border-bottom:1px solid rgba(22,21,24,0.2);">
+      <h2 class="heavy-display slide-h2" style="font-size:34px; color:#161518;">
+        SIMULACRO FINAL <span class="editorial-script" style="text-transform:none; font-size:44px; color:#b83b68;">de examen</span>
+      </h2>
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <button class="reveal-btn" style="color:#b83b68; border-color:#b83b68;" onclick="toggleAllSimulacro(this)">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Revelar respuestas
+        </button>
+        <p style="font-size:14px; letter-spacing:2px; color:#b83b68; font-weight:800;">[ JUEVES · HORA 2 ]</p>
+      </div>
+    </div>
+
+    <div style="flex-grow:1; display:flex; align-items:center; z-index:2;">
+      <div class="flex-cards-3" style="width:100%;">
+        <div class="apple-glass-light anim-item delay-1" style="padding:32px 26px; flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+          <div>
+            <p style="font-size:13px; color:#b83b68; font-weight:800; margin-bottom:10px;">[ ÁLGEBRA ]</p>
+            <h3 style="font-size:22px; color:#161518;"><math display="math"><msup><mrow><mo>(</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow><mn>3</mn></msup></math></h3>
+          </div>
+          <p class="sim-ans hidden-answer" style="font-size:18px; color:#b83b68; font-weight:800; background:rgba(255,255,255,0.8); padding:12px; border-radius:14px;">
+            <math display="math"><mn>8</mn><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>12</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>6</mn><mi>x</mi><mo>+</mo><mn>1</mn></math>
+          </p>
+        </div>
+
+        <div class="apple-glass-light anim-item delay-2" style="padding:32px 26px; flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+          <div>
+            <p style="font-size:13px; color:#b83b68; font-weight:800; margin-bottom:10px;">[ CONTEO ]</p>
+            <h3 style="font-size:22px; color:#161518;">Comité de 3 entre 12</h3>
+          </div>
+          <p class="sim-ans hidden-answer" style="font-size:18px; color:#b83b68; font-weight:800; background:rgba(255,255,255,0.8); padding:12px; border-radius:14px;">
+            <math display="math"><mi>C</mi><mo>(</mo><mn>12</mn><mo>,</mo><mn>3</mn><mo>)</mo><mo>=</mo><mn>220</mn></math> formas
+          </p>
+        </div>
+
+        <div class="apple-glass-light anim-item delay-3" style="padding:32px 26px; flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+          <div>
+            <p style="font-size:13px; color:#b83b68; font-weight:800; margin-bottom:10px;">[ AZAR ]</p>
+            <h3 style="font-size:22px; color:#161518;">6 amargos, 4 de leche</h3>
+          </div>
+          <p class="sim-ans hidden-answer" style="font-size:18px; color:#b83b68; font-weight:800; background:rgba(255,255,255,0.8); padding:12px; border-radius:14px;">
+            <math display="math"><mi>P</mi><mo>=</mo><mfrac><mn>6</mn><mn>9</mn></mfrac><mo>=</mo><mn>66.7</mn><mo>%</mo></math>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 15: CIERRE EDITORIAL DARK GLASS ==================== -->
+  <section class="slide" style="background: radial-gradient(circle at 35% 50%, #3d1e2d 0%, #151219 55%, #0a090c 100%); justify-content:center; align-items:center; text-align:center;">
+    <div class="ambient-orb" style="width: 480px; height: 480px; background: rgba(244, 156, 187, 0.25);"></div>
+    <div class="orbital-ring" style="width: 620px; height: 620px;"></div>
+
+    <div class="apple-glass-dark anim-item delay-1" style="padding:52px 64px; display:flex; flex-direction:column; align-items:center; z-index:2; max-width:860px; width:100%;">
+      <p style="font-size:14px; letter-spacing:3px; color:#f49cbb; font-weight:700; margin-bottom:20px;">
+        [ 100% PREPARADA PARA TRIUNFAR ]
+      </p>
+      <h2 class="heavy-display section-hero-title" style="font-size:64px; color:#ffffff; margin-bottom:14px; line-height:0.96;">
+        CONQUISTA <span style="color:#f49cbb;">TU EXAMEN</span>
+      </h2>
+      <p class="editorial-script hero-script" style="font-size:36px; color:#f9d5e2; max-width:680px; margin-bottom:28px;">
+        tienes el método en tus manos, respira hondo y confía en ti
+      </p>
+      <div style="width:90px; height:2px; background:#f49cbb;"></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Barra de navegación estilo Apple Dynamic Island -->
+<nav id="apple-dock" aria-label="Controles de presentación">
+  <button class="dock-btn" onclick="prevSlide()" title="Anterior (Flecha Izquierda)">
+    <i class="fa-solid fa-chevron-left"></i>
+  </button>
+  <span class="dock-pill" id="slide-counter">01 / 15</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-bar"></div>
+  </div>
+  <button class="dock-btn" onclick="nextSlide()" title="Siguiente (Flecha Derecha / Espacio)">
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
+  <button class="dock-btn" onclick="toggleFullscreen()" title="Pantalla Completa">
+    <i class="fa-solid fa-expand"></i>
+  </button>
+</nav>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counterEl = document.getElementById('slide-counter');
+  const progressBar = document.getElementById('progress-bar');
+  const stage = document.getElementById('stage');
+  let current = 0;
+
+  // Auto-escalado perfecto para TV, Desktop, Laptop y Tablet Horizontal
+  function fitStageToScreen() {
+    const isPortraitMobile = window.innerWidth <= 860 && window.innerHeight > window.innerWidth;
+    if (isPortraitMobile) {
+      stage.style.transform = 'none';
+      return;
+    }
+    const scaleX = window.innerWidth / 1280;
+    const scaleY = (window.innerHeight - 68) / 720;
+    const scale = Math.min(scaleX, scaleY, 2.5); // Soporta hasta TV 4K
+    stage.style.transform = `scale(${Math.max(scale, 0.25)})`;
+  }
+
+  window.addEventListener('resize', fitStageToScreen);
+  window.addEventListener('orientationchange', fitStageToScreen);
+  fitStageToScreen();
+
+  function updateSlides() {
+    slides.forEach((s, idx) => {
+      s.classList.toggle('active', idx === current);
+      if (idx === current) s.scrollTop = 0;
+    });
+    const num = String(current + 1).padStart(2, '0');
+    const total = String(slides.length).padStart(2, '0');
+    counterEl.textContent = `${num} / ${total}`;
+    progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+  }
+
+  function nextSlide() {
+    current = (current + 1) % slides.length;
+    updateSlides();
+  }
+
+  function prevSlide() {
+    current = (current - 1 + slides.length) % slides.length;
+    updateSlides();
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+
+  function toggleAnswer(btn) {
+    const ans = btn.parentElement.nextElementSibling.querySelector('.hidden-answer');
+    ans.classList.toggle('shown');
+    btn.innerHTML = ans.classList.contains('shown')
+      ? '<i class="fa-solid fa-eye-slash"></i> Ocultar'
+      : '<i class="fa-solid fa-eye"></i> Ver solución';
+  }
+
+  function toggleAllSimulacro(btn) {
+    const answers = document.querySelectorAll('.sim-ans');
+    const anyHidden = Array.from(answers).some(el => !el.classList.contains('shown'));
+    answers.forEach(el => el.classList.toggle('shown', anyHidden));
+    btn.innerHTML = anyHidden
+      ? '<i class="fa-solid fa-eye-slash"></i> Ocultar respuestas'
+      : '<i class="fa-solid fa-wand-magic-sparkles"></i> Revelar respuestas';
+  }
+
+  // Navegación por teclado (Computadora / Control remoto TV)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key.toLowerCase() === 'f') {
+      toggleFullscreen();
+    }
+  });
+
+  // Navegación táctil Swipe para Teléfonos y Tablets
+  let touchStartX = 0;
+  let touchStartY = 0;
+  stage.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  stage.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+      if (dx < 0) nextSlide();
+      else prevSlide();
+    }
+  }, { passive: true });
+
+  // Efecto Cristal 3D Tilt & Luz Especular al mover el cursor
+  document.querySelectorAll('.apple-glass-dark, .apple-glass-light, .apple-glass-pink').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      if (window.innerWidth <= 860) return;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+      const rotateX = ((y / rect.height) - 0.5) * -6;
+      const rotateY = ((x / rect.width) - 0.5) * 6;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // Partículas matemáticas flotantes con constelación magnética interactiva
+  const canvas = document.getElementById('math-particles');
+  const ctx = canvas.getContext('2d');
+  const symbols = ['x²', 'π', '∑', 'Ω', '√', '∞', 'n!', '±', 'Δ', '∫', 'P(A)'];
+  let pointer = { x: -999, y: -999 };
+
+  stage.addEventListener('mousemove', (e) => {
+    const rect = stage.getBoundingClientRect();
+    pointer.x = ((e.clientX - rect.left) / rect.width) * 1280;
+    pointer.y = ((e.clientY - rect.top) / rect.height) * 720;
+  });
+
+  stage.addEventListener('mouseleave', () => {
+    pointer.x = -999;
+    pointer.y = -999;
+  });
+
+  const particles = Array.from({ length: 30 }, () => ({
+    x: Math.random() * 1280,
+    y: Math.random() * 720,
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: -0.2 - Math.random() * 0.4,
+    size: 14 + Math.random() * 13,
+    alpha: 0.16 + Math.random() * 0.26,
+    symbol: symbols[Math.floor(Math.random() * symbols.length)],
+    angle: Math.random() * Math.PI * 2,
+    spin: (Math.random() - 0.5) * 0.01
+  }));
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, 1280, 720);
+    particles.forEach((p, idx) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.angle += p.spin;
+
+      if (p.y < -30) { p.y = 750; p.x = Math.random() * 1280; }
+      if (p.x < -30) { p.x = 1310; }
+      if (p.x > 1310) { p.x = -30; }
+
+      const dx = pointer.x - p.x;
+      const dy = pointer.y - p.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 190) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(pointer.x, pointer.y);
+        ctx.strokeStyle = `rgba(244, 156, 187, ${(1 - dist / 190) * 0.45})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+
+      for (let j = idx + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const d2 = Math.hypot(p.x - p2.x, p.y - p2.y);
+        if (d2 < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(244, 156, 187, ${(1 - d2 / 120) * 0.16})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.font = `600 ${p.size}px "Cormorant Garamond", serif`;
+      ctx.fillStyle = `rgba(244, 156, 187, ${dist < 190 ? Math.min(0.95, p.alpha + 0.4) : p.alpha})`;
+      ctx.textAlign = 'center';
+      ctx.fillText(p.symbol, 0, 0);
+      ctx.restore();
+    });
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+</script>
+
+</body>
+</html>
